@@ -1,17 +1,25 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import './generator'
+import reducers from './reducers/index'
 
+import { createStore, applyMiddleware } from 'redux'
+import Counter from './components/Counter';
+import createSagaMiddleware from 'redux-saga'
+
+import { increment,decrement } from './actions/index'
+
+//create saga middleware
+const sagaMiddleware = createSagaMiddleware();
+const store = createStore(reducers,
+    applyMiddleware(sagaMiddleware))
+    
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
+    <React.StrictMode>
+        <Counter value={store.getState()}
+          onDecrement={()=> store.dispatch(increment())}
+          onIncrement={()=> store.dispatch(decrement())} />         
+    </React.StrictMode>,
   document.getElementById('root')
 );
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
